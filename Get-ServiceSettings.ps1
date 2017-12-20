@@ -12,7 +12,7 @@ function Get-ServiceSettings {
 	.PARAMETER Credential
 		Allows you to login to $ComputerName using alternative credentials.
 	
-	.PARAMETER Service
+	.PARAMETER ServiceName
 		Services to track
 	
 	.PARAMETER Path
@@ -40,7 +40,9 @@ function Get-ServiceSettings {
 	param (
 		[parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
 		[PSCredential]$Credential,
-        [string]$Service = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk"),
+		[Parameter(ParameterSetName = "ServiceName")]
+		[string[]]$ServiceName,
+        	#[string]$Service = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk"),
 		[string]$Path
 	)
 
@@ -50,21 +52,31 @@ begin
         #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
         #$Computers       = Get-Content $LoadServerFile
 
+        If(!$ServiceName)
+        {
+            $ServiceName = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk")
+        }
+
         $ServiceStatuses = @()
 
         ForEach ($computer in $ComputerName)
         {
-            Write-Message -Level Verbose -Message "Connecting to $computer"
-            ForEach ($serv in $service)
+            Write-Verbose -Message "Connecting to $computer"
+            ForEach ($Service in $ServiceName)
             {
-                Write-Message -Level Verbose -Message "Processing $serv"
-                $objService = Get-WmiObject -Class WIN32_Service -ComputerName $computer -Filter "Name = '$serv'"
+
+                Write-Verbose -Message "Processing $Service"
+                $objService = Get-WmiObject -Class WIN32_Service -ComputerName $computer -Filter "Name = '$Service'"
                 $ServiceStatuses += $objService | select PSComputerName, name, startname, startmode
+
             }
 
         }
-
-        $ServiceStatuses | select PSComputerName, name, startname, startmode | Export-Csv $Path -notypeinformation
+	    If ($Path)
+        {
+		    $ServiceStatuses | select PSComputerName, name, startname, startmode | Export-Csv $Path -notypeinformation
+	    }
+        
         $ServiceStatuses | Format-Table
     }
 }
