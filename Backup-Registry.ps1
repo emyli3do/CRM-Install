@@ -32,7 +32,7 @@ function Backup-Registry {
 		Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
 		License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
-	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
 	param (
 		[parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
         [string]$BackupFolder
