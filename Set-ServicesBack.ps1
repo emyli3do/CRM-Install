@@ -38,79 +38,73 @@ function Set-ServicesBack {
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
 	param (
-		[parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
+		[parameter(Mandatory=$true,ValueFromPipeline)]
+		[string[]]$ComputerName = $env:COMPUTERNAME,
+		[parameter(Mandatory=$true)]
 		[PSCredential]$Credential,
 		[Parameter(ParameterSetName = "ServiceName")]
 		[string[]]$ServiceName,
-        	#[string]$Service = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk"),
+		[parameter(Mandatory=$true)]
 		[string]$Path
 	)
 
 begin
     {
-    #$bDebug = 0
-    #$credential = Get-Credential -Message "Please enter in the password for ASM\SIF.Service as it will be used to setup services and Web AppPools" -UserName "ASM\SIF.Service"
-    #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
-    #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
 
-    $ServiceStatuses = Import-Csv $Path
-    #$Computers = Get-Content $LoadServerFile
-    
-    If(!$ServiceName)
-        {
-            $ServiceName = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk")
-        }
-
-        $ServiceStatuses = @()
-
-    ForEach ($computer in $ComputerName)
-    {
-        ForEach ($service in $ServiceName)
-        {
-            ForEach ($ServiceStatus in $ServiceStatuses)
+        $ServiceStatuses = Import-Csv $Path
+       
+        If(!$ServiceName)
             {
-                If ($ServiceStatus.PSComputerName -eq $computer)
+                $ServiceName = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk")
+            }
+    
+        ForEach ($computer in $ComputerName)
+        {
+            ForEach ($service in $ServiceName)
+            {
+                ForEach ($ServiceStatus in $ServiceStatuses)
                 {
-                    If ($ServiceStatus.name -eq $service)
+                    If ($ServiceStatus.PSComputerName -eq $computer)
                     {
-                        If ($ServiceStatus.startname -ne 'LocalSystem')
-                        if ($pscmdlet.ShouldProcess("$Computer", "Set Service to file settings"))
+                        If ($ServiceStatus.name -eq $service)
                         {
+                            If ($pscmdlet.ShouldProcess("$Computer", "Set $service to file settings"))
                             {
-                                $params = @{
-                                  "Namespace" = "root\CIMV2"
-                                  "Class" = "Win32_Service"
-                                  "Filter" = "ServiceName='$service'"
+                                {
+                                    $params = @{
+                                      "Namespace" = "root\CIMV2"
+                                      "Class" = "Win32_Service"
+                                      "Filter" = "ServiceName='$service'"
+                                    }
+    
+                                    $WMIservice = Get-WmiObject @params -ComputerName $computer
+    
+                                    $WMIservice.Change($null,
+                                      $null,
+                                      $null,
+                                      $null,
+                                      $null,
+                                      $null,
+                                      'ASM\SIF.Service',
+                                      $credential.GetNetworkCredential().Password,
+                                      $null,
+                                      $null,
+                                      $null) | Out-Null
                                 }
-
-                                $WMIservice = Get-WmiObject @params -ComputerName $computer
-
-                                $WMIservice.Change($null,
-                                  $null,
-                                  $null,
-                                  $null,
-                                  $null,
-                                  $null,
-                                  'ASM\SIF.Service',
-                                  $credential.GetNetworkCredential().Password,
-                                  $null,
-                                  $null,
-                                  $null) | Out-Null
-                            }
-
-                            If ($ServiceStatus.startmode -eq "Auto")
-                            {
-                                Set-Service -Name $service -ComputerName $computer -StartupType Automatic
-                            }
-                            Else
-                            {
-                                Set-Service -Name $service -ComputerName $computer -StartupType Disabled
+    
+                                If ($ServiceStatus.startmode -eq "Auto")
+                                {
+                                    Set-Service -Name $service -ComputerName $computer -StartupType Automatic
+                                }
+                                Else
+                                {
+                                    Set-Service -Name $service -ComputerName $computer -StartupType Disabled
+                                }
                             }
                         }
                     }
-                }
-            }   
+                }   
+            }
         }
     }
 }
-
