@@ -1,13 +1,13 @@
 function Stop-IIS {
 <#
 	.SYNOPSIS
-		Stops The World Wide WebPublishing Service (IIS)
+		Stops The World Wide Web Publishing Service (IIS)
 	
 	.DESCRIPTION
-		Stops The World Wide WebPublishing Service (IIS)
+		Stops The World Wide Web Publishing Service (IIS)
 	
 	.PARAMETER ComputerName
-		The target Server(s). Defaults to localhost.
+		The target Server(s).
 	
 	.PARAMETER Credential
 		Allows you to login to $ComputerName using alternative credentials.
@@ -38,7 +38,7 @@ function Stop-IIS {
 		[string]$Path
 	)
 
-begin
+process
     {
         #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
         #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
@@ -53,7 +53,7 @@ begin
                 {
                     Invoke-Command -ComputerName $computer -Credential $credential -Args $computer -ScriptBlock {
                         param($Invokecomputer)
-                        If ((Get-Service -Name W3SVC).Status -eq "Running")
+                        If ((Get-Service -Name W3SVC -ErrorAction SilentlyContinue).Status -eq "Running")
                         {
                             cmd /c 'SC.EXE STOP W3SVC'
                         }
@@ -63,7 +63,7 @@ begin
                 {
                     Invoke-Command -ComputerName $computer -Args $computer -ScriptBlock {
                         param($Invokecomputer)
-                        If ((Get-Service -Name W3SVC).Status -eq "Running")
+                        If ((Get-Service -Name W3SVC -ErrorAction SilentlyContinue).Status -eq "Running")
                         {
                             cmd /c 'SC.EXE STOP W3SVC'
                         }
