@@ -21,9 +21,9 @@ function Backup-Registry {
 		If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
 	
 	.EXAMPLE
-		New-StayinFrontAppPool -ComputerName Server1 -Path C:\temp\ServicesSttings.csv
+		Backup-Registry -ComputerName $Computer -BackupFolder "C:\Temp" -RegistryKey $reg
 		
-		Creates the StayinFront AppPool with default settings
+		Backs up the registry key of reg on remote computer $Computer To the local folder of C:\Temp
 	
 	.NOTES
 		Tags: Services
