@@ -51,7 +51,11 @@ begin
     {
         $NewPSSession = New-PSSession -ComputerName $computer
         Invoke-Command -Session $NewPSSession -ScriptBlock { 
-		If (!(Test-Path C:\Temp\)) {New-Item C:\Temp -directory $CreatedFolder = 1}
+		If (!(Test-Path C:\Temp\))
+		{
+			New-Item C:\Temp -directory
+			$CreatedFolder = 1
+		}
 		cmd /c "reg export $ReristryKey C:\Temp\Registry.reg"
         }
 	Remove-PSSession -Session $NewPSSession
