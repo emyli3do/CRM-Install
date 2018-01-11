@@ -17,6 +17,12 @@ $jobscript = {
 	Invoke-Command -ComputerName $computer -ScriptBlock { Msiexec c:\temp\CrystalDiskInfo7.0.4.msi /i  /log C:\MSIInstall.log }
 }
 
+$computer | 
+	ForEach-Object{
+		Start-Job -ScriptBlock $jobscript -ArgumentList $_ -Credential $domaincredentail
+	}
+	
+	
 ForEach ($computer in $computers)
 {
     New-Item "\\$computer\C$\Temp\StayinFrontInstall" -ItemType Directory
