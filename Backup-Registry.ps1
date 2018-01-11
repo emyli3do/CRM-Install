@@ -11,7 +11,8 @@ function Backup-Registry {
 	
 	.PARAMETER Credential
 		Allows you to login to $ComputerName using alternative credentials.
-    .PARAMETER Path
+		
+	.PARAMETER Path
 		The path to store the file that has the information
 		
 	.PARAMETER WhatIf
@@ -26,7 +27,7 @@ function Backup-Registry {
 		Backs up the registry key of reg on remote computer $Computer To the local folder of C:\Temp
 	
 	.NOTES
-		Tags: Services
+		Tags: Backup Registry
 		
 		Website: N/A
 		Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
@@ -35,9 +36,9 @@ function Backup-Registry {
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
 	param (
 		[parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
-        [string]$BackupFolder
-		[PSCredential]$Credential
-        [string]$RegistryKey
+		[string]$BackupFolder,
+		[PSCredential]$Credential,
+		[string]$RegistryKey
 		#[string]$Path Eventually add logging
 	)
 
@@ -50,12 +51,11 @@ begin
     {
         $NewPSSession = New-PSSession -ComputerName $computer
         Invoke-Command -Session $NewPSSession -ScriptBlock { 
-        If (!(Test-Path C:\Temp\)) {New-Item C:\Temp -directory
-	$CreatedFolder = 1}
-        cmd /c "reg export $ReristryKey C:\Temp\Registry.reg"
+		If (!(Test-Path C:\Temp\)) {New-Item C:\Temp -directory $CreatedFolder = 1}
+		cmd /c "reg export $ReristryKey C:\Temp\Registry.reg"
         }
-        Remove-PSSession -Session $NewPSSession
-        Copy-Item -Path \\$computer\C$\Temp\Registry.reg -Destination C:\Temp\Registry\$computer.reg
+	Remove-PSSession -Session $NewPSSession
+	Copy-Item -Path \\$computer\C$\Temp\Registry.reg -Destination C:\Temp\Registry\$computer.reg
 	Remove-Item -Path \\$computer\C$\Temp\Registry.reg
 	If ($CreatedFolder -eq 1) {Remove-Item -Path \\$computer\C$\Temp}
     }
