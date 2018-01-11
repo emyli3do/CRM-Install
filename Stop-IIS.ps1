@@ -32,8 +32,9 @@ function Stop-IIS {
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
 	param (
-		[parameter(ValueFromPipeline)][string[]]$ComputerName = $env:COMPUTERNAME,
-        [PSCredential]$credential,
+		[parameter(ValueFromPipeline,Mandatory=$true)]
+		[string[]]$ComputerName,
+		[PSCredential]$credential,
 		[string]$Path
 	)
 
