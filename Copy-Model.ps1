@@ -49,7 +49,7 @@ function Copy-Model {
 process
     {
         $PushPath -Replace ":", "$"
-        foreach ($computer in $Computers)
+        foreach ($computer in $ComputerName)
         {
             If ($pscmdlet.ShouldProcess("$computer", "Copying Model Folder from $Release Path"))
             {
