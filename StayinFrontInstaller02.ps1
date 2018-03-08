@@ -139,33 +139,6 @@ $service.Change($null,
   $null,
   $null) | Out-Null
 
-
-#cmd /c 'sc config AeWorkflow obj="SIF.Service@asm.lan"' | Out-Null
-#$passwordadd = 'sc config AeWorkflow password=' + $password
-#cmd /c $passwordadd | Out-Null
-#cmd /c 'sc config AeWorkflow start=auto' | Out-Null
-#cmd /c 'sc Stop   AeWorkflow' | Out-Null
-#cmd /c 'sc Start  AeWorkflow' | Out-Null
-
-#$params = @{
-#  "Namespace" = "root\CIMV2"
-#  "Class" = "Win32_Service"
-#  "Filter" = "DisplayName='StayinFront Workflow Server'"
-#}
-#$service = Get-WmiObject @params
-#
-#$service.Change($null,
-#  $null,
-#  $null,
-#  $null,
-#  $null,
-#  $null,
-#  $null,
-#  $credential.GetNetworkCredential().Password,
-#  $null,
-#  $null,
-#  $null) | Out-Null
-
 cmd /c 'sc config AeWorkflow start=disabled' | Out-Null
 cmd /c 'sc Stop   AeWorkflow' | Out-Null
 
@@ -419,7 +392,6 @@ If ($purpose -eq 'W')
 
     Write-Host "Set Default App Pool Settings"
     Read-Host "Press Enter to continue . . . "
-    #Get-ItemProperty -Path IIS:\AppPools\DefaultAppPool | select *
     Set-ItemProperty -Path IIS:\AppPools\DefaultAppPool -Name managedRuntimeVersion -Value 'v2.0'
     Set-ItemProperty -Path IIS:\AppPools\DefaultAppPool -Name enable32BitAppOnWin64 -Value 'False'
     Write-Host "Default App Pool Settings Set"
@@ -432,14 +404,7 @@ If ($purpose -eq 'W')
 
     Write-Host "Adding ISAPI filter"
     Read-Host "Press Enter to continue . . . "
- #   If (!(Get-WebConfigurationProperty -Filter /system.webserver/isapiFilters -Name Collection[name="_WW"]))
- #   {
- #       Add-WebConfiguration -Filter /system.webserver/isapiFilters -Value @{
- #       name = '_WW';
- #       path = 'C:\Program Files (x86)\StayinFront\CRM\WW.dll'
- #       }
- #   }
-
+ 
     Write-Host "ISAPI filter Added"
 
     Write-Host "Setting up Handler Mappings"
