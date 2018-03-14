@@ -46,7 +46,7 @@ function Get-ServiceSettings {
 		[string]$Path
 	)
 
-begin
+    process
     {
         #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
         #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
