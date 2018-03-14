@@ -38,7 +38,7 @@ function Get-ServiceSettings {
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
 	param (
-		[parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
+		[parameter(ValueFromPipeline)][string[]]$ComputerName = $env:COMPUTERNAME,
 		[PSCredential]$Credential,
 		[Parameter(ParameterSetName = "ServiceName")]
 		[string[]]$ServiceName,
