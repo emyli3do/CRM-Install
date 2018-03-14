@@ -42,25 +42,38 @@ function Backup-Registry {
 		#[string]$Path Eventually add logging
 	)
 
-begin
-{
-    If(!($RegistryKey)) {$RegistryKey = "HKLM\SOFTWARE\Wow6432Node\StayinFront"}
-    If (!(Test-Path $BackupFolder)) {New-Item $BackupFolder -directory}
-    
-    ForEach ($computer in $ComputerName)
-    {
-        $NewPSSession = New-PSSession -ComputerName $computer
-        Invoke-Command -Session $NewPSSession -ScriptBlock { 
-		If (!(Test-Path C:\Temp\))
+	process
+	{
+	    If(!($RegistryKey)) {$RegistryKey = "HKLM\SOFTWARE\Wow6432Node\StayinFront"}
+	    If (!(Test-Path $BackupFolder)) {New-Item $BackupFolder -directory}
+
+	    ForEach ($computer in $ComputerName)
+	    {
+	    	IF ($computer = $env:COMPUTERNAME)
 		{
-			New-Item C:\Temp -directory
-			$CreatedFolder = 1
+			If (!(Test-Path C:\Temp\))
+		    	{
+		    		New-Item C:\Temp -directory
+		    		$CreatedFolder = 1
+		    	}
+		    	IF (Test-Path $RegistryKey) {cmd /c "reg export $RegistryKey C:\Temp\Registry.reg"} Else {Write-Error "Could not find Registry Key on $computer"}
 		}
-		cmd /c "reg export $ReristryKey C:\Temp\Registry.reg"
-        }
-	Remove-PSSession -Session $NewPSSession
-	Copy-Item -Path \\$computer\C$\Temp\Registry.reg -Destination C:\Temp\Registry\$computer.reg
-	Remove-Item -Path \\$computer\C$\Temp\Registry.reg
-	If ($CreatedFolder -eq 1) {Remove-Item -Path \\$computer\C$\Temp}
-    }
+		Else
+		{
+		    $NewPSSession = New-PSSession -ComputerName $computer
+		    Invoke-Command -Session $NewPSSession -ScriptBlock { 
+		    	If (!(Test-Path C:\Temp\))
+		    	{
+		    		New-Item C:\Temp -directory
+		    		$CreatedFolder = 1
+		    	}
+		    	IF (Test-Path $RegistryKey) {cmd /c "reg export $RegistryKey C:\Temp\Registry.reg"} Else {Write-Error "Could not find Registry Key on $computer"}
+		    }
+		    Remove-PSSession -Session $NewPSSession
+		}
+		Copy-Item -Path \\$computer\C$\Temp\Registry.reg -Destination C:\Temp\Registry\$computer.reg
+		Remove-Item -Path \\$computer\C$\Temp\Registry.reg
+		If ($CreatedFolder -eq 1) {Remove-Item -Path \\$computer\C$\Temp}
+	    }
+	}
 }
