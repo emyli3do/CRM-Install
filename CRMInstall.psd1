@@ -67,6 +67,7 @@
 		'Get-ServiceSettings',
 		'Install-CRMLanguage',
 		'Remove-CRMLanguage',
+		'Remove-CRM',
 		'Start-IIS',
 		'Stop-IIS',
 		'Stop-Services'
