@@ -35,7 +35,7 @@ function Backup-Registry {
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
 	param (
-		[parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
+		[parameter(ValueFromPipeline)][string[]]$ComputerName = $env:COMPUTERNAME,
 		[parameter(Mandatory=$true)][string]$BackupFolder,
 		[PSCredential]$Credential,
 		[string]$RegistryKey
