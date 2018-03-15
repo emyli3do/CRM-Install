@@ -1,4 +1,4 @@
-﻿function Remove-CRMLanguage {
+﻿function Install-CRMLanguage {
 <#
 	.SYNOPSIS
 		Create the StayinFront AppPool with default settings
@@ -45,10 +45,8 @@
 	process
 	{
         $CRMLanguagePack = New-PSSession -ComputerName $ComputerName        
-
-        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { $app = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -match "StayinFront CRM language pack"} }
-        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { $cmd = "msiexec.exe /x " + $app.IdentifyingNumber + " /qn /L*vx C:\Temp\StayinFrontLanguagesUninstall.txt" }
-        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { cmd /c $cmd } -AsJob
+        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { IF (Test-Path 'C:\Temp\StayinFrontLanguages.txt') {Remove-Item 'C:\Temp\StayinFrontLanguages.txt' }}
+        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { cmd /c 'msiexec.exe /qn /i "C:\Temp\StayinFrontLanguageInstall\StayinFrontCRM-Languages 13.0.0.1310.msi" /l*vx C:\Temp\StayinFrontLanguages.txt' } -AsJob
 
         Remove-PSSession -Session $CRMLanguagePack
     }
