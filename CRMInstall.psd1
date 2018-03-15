@@ -65,6 +65,7 @@
 		'Backup-Registry',
 		'Copy-APK',
 		'Get-ServiceSettings',
+		'Remove-CRMLanguage',
 		'Start-IIS',
 		'Stop-IIS',
 		'Stop-Services'
