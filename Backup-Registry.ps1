@@ -38,14 +38,17 @@ function Backup-Registry {
 		[parameter(ValueFromPipeline)][string[]]$ComputerName = $env:COMPUTERNAME,
 		[parameter(Mandatory=$true)][string]$BackupFolder,
 		[PSCredential]$Credential,
-		[string]$RegistryKey
+		[string]$RegistryKey = "HKLM:\SOFTWARE\Wow6432Node\StayinFront"
 		#[string]$Path Eventually add logging
 	)
-
+	begin
+    {
+        $RegCommandRegistryKey = $RegistryKey -replace ":",""
+        $cmd = "cmd /c ""reg export $RegCommandRegistryKey C:\Temp\Registry.reg"" /y"
+    }
 	process
 	{
-	    If(!($RegistryKey)) {$RegistryKey = "HKLM\SOFTWARE\Wow6432Node\StayinFront"}
-	    If (!(Test-Path $BackupFolder)) {New-Item $BackupFolder -directory}
+	    If (!(Test-Path $BackupFolder)) {New-Item $BackupFolder -ItemType directory}
 
 	    ForEach ($computer in $ComputerName)
 	    {
@@ -53,25 +56,26 @@ function Backup-Registry {
 		{
 			If (!(Test-Path C:\Temp\))
 		    	{
-		    		New-Item C:\Temp -directory
+		    		New-Item C:\Temp -ItemType directory
 		    		$CreatedFolder = 1
 		    	}
-		    	IF (Test-Path $RegistryKey) {cmd /c "reg export $RegistryKey C:\Temp\Registry.reg"} Else {Write-Error "Could not find Registry Key on $computer"}
+		    	IF (Test-Path $RegistryKey) {cmd /c $cmd} Else {Write-Error "Could not find Registry Key on $env:computername"}
 		}
 		Else
 		{
 		    $NewPSSession = New-PSSession -ComputerName $computer
-		    Invoke-Command -Session $NewPSSession -ScriptBlock { 
+		    $CreatedFolder = Invoke-Command -Session $NewPSSession -ScriptBlock {param($RegistryKey,$cmd)
 		    	If (!(Test-Path C:\Temp\))
 		    	{
-		    		New-Item C:\Temp -directory
+		    		New-Item C:\Temp -ItemType directory
 		    		$CreatedFolder = 1
 		    	}
-		    	IF (Test-Path $RegistryKey) {cmd /c "reg export $RegistryKey C:\Temp\Registry.reg"} Else {Write-Error "Could not find Registry Key on $computer"}
-		    }
+		    	IF (Test-Path $RegistryKey) {cmd /c $cmd} Else {Write-Error "Could not find Registry Key on $env:computername"}
+		    } -ArgumentList $RegistryKey,$cmd
 		    Remove-PSSession -Session $NewPSSession
 		}
-		Copy-Item -Path \\$computer\C$\Temp\Registry.reg -Destination C:\Temp\Registry\$computer.reg
+        Write-Verbose "Copying Registry.reg from created computer to backup destination as $BackupFolder\$computer.reg"
+		Copy-Item -Path \\$computer\C$\Temp\Registry.reg -Destination $BackupFolder\$computer.reg
 		Remove-Item -Path \\$computer\C$\Temp\Registry.reg
 		If ($CreatedFolder -eq 1) {Remove-Item -Path \\$computer\C$\Temp}
 	    }
