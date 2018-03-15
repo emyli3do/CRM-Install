@@ -41,42 +41,29 @@ function Get-ServiceSettings {
 		[parameter(ValueFromPipeline)][string[]]$ComputerName = $env:COMPUTERNAME,
 		[PSCredential]$Credential,
 		[Parameter(ParameterSetName = "ServiceName")]
-		[string[]]$ServiceName,
-        	#[string]$Service = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk"),
+		[string[]]$ServiceName = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk"),
 		[string]$Path
 	)
-
+    begin
+    {
+        $ServiceStatuses = @()
+    }
     process
     {
-        #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
-        #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
-        #$Computers       = Get-Content $LoadServerFile
-
-        If(!$ServiceName)
-        {
-            $ServiceName = @("AeWorkflow","Watchdog","ActivElkSynch","StayinFront.MulticastHub","ActivElkComms","ActivElk")
-        }
-
-        $ServiceStatuses = @()
-
         ForEach ($computer in $ComputerName)
         {
             Write-Verbose -Message "Connecting to $computer"
             ForEach ($Service in $ServiceName)
             {
-
                 Write-Verbose -Message "Processing $Service"
                 $objService = Get-WmiObject -Class WIN32_Service -ComputerName $computer -Filter "Name = '$Service'"
                 $ServiceStatuses += $objService | select PSComputerName, name, startname, startmode
-
             }
-
         }
-	    If ($Path)
-        {
-		    $ServiceStatuses | select PSComputerName, name, startname, startmode | Export-Csv $Path -notypeinformation
-	    }
-        
+    }
+    end
+    {
+        If ($Path) {$ServiceStatuses | select PSComputerName, name, startname, startmode | Export-Csv $Path -notypeinformation}
         $ServiceStatuses | Format-Table
     }
 }
