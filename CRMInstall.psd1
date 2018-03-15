@@ -65,8 +65,8 @@
 		'Backup-Registry',
 		'Copy-APK',
 		'Get-ServiceSettings',
+		'Start-IIS',
 		'Stop-IIS',
-		'Start-IIS'
 		'Stop-Services'
 	)
 	
