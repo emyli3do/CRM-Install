@@ -52,7 +52,7 @@ function Backup-Registry {
 
 	    ForEach ($computer in $ComputerName)
 	    {
-	    	IF ($computer = $env:COMPUTERNAME)
+	    	IF ($computer -eq $env:COMPUTERNAME)
 		{
 			If (!(Test-Path C:\Temp\))
 		    	{
