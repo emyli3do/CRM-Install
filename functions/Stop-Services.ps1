@@ -39,7 +39,7 @@
 	)
 
 	process
-	{foreach ($computer in $Computers)
+	{foreach ($computer in $ComputerName)
 {
     $NewPSSession = New-PSSession -ComputerName $computer
     Invoke-Command -Session $NewPSSession -ScriptBlock {$ServiceNames = "AeWkfSvr","StayinFront.Watchdog.Monitor","AeSynch","StayinFront.MulticastHub","aeCommsE","AeServer","mmc","StayinFront.ServerMonitor","StayinFrontCRM"}
