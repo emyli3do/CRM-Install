@@ -73,14 +73,3 @@ process
     }
 }
 
-
-
-Best Regards,
-Emylie Do
-Database Engineer
-Advantage Solutions 
-O: +1 949-797-2950 x20950 | M: +1 909-896-8885 
-Emylie.do@advantagesolutions.net|www.advantagesolutions.net
-
-This e-mail message, including any attachments, is for the sole use of the intended recipient(s) and may contain information that is confidential and protected by law from unauthorized disclosure. Any unauthorized review, use, disclosure or distribution is prohibited. If you are not the intended recipient, please contact the sender by reply e-mail and destroy all copies of the original message.
-
