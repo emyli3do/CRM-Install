@@ -34,14 +34,11 @@ function Install-CRM {
        param (
              [parameter(ValueFromPipeline,Mandatory=$true)]
              [string[]]$ComputerName = $env:COMPUTERNAME,
-             [parameter(Mandatory=$true)]
-             [string]$ReleasePath
+             [string]$ReleasePath = "\\asm.lan\dcshare\App\SIF\Prod\Data\!CurrentRelease"
        )
 
 process
     {
-        $ReleasePath = "\\asm.lan\dcshare\App\SIF\Prod\Data\!CurrentRelease"
-        
         $sourcefolder = (Get-ChildItem $ReleasePath -Filter "StayinFrontCRM*" -Directory).Name
         $sourcefolder = "$ReleasePath\$sourcefolder"
         
@@ -69,7 +66,7 @@ process
             if ($pscmdlet.ShouldProcess("$destinationfolder", "Create Directory")) {New-Item $destinationFolder -ItemType Directory |out-null}
 
             Write-Verbose -Message "Copying Install Package to $computer"
-            if ($pscmdlet.ShouldProcess("$destinationfolder", "Copy File $sourcefile")) {Copy-Item -Path $sourcefile -Destination $destinationFolder}
+            if ($pscmdlet.ShouldProcess("$destinationfolder", "Copy File $sourcefile")) {Copy-Item -Path $sourcefile -Destination "$destinationFolder\StayinFrontCRM-x64.msi"}
             Write-Verbose -Message "Connecting to $computer"
             Start-Job -ScriptBlock $jobscript -ArgumentList $computer
         }
