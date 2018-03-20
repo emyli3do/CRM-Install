@@ -32,24 +32,25 @@ function Install-CRMLanguagePack {
 #>
        [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
        param (
-             [parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
-             [string]$Path
+             [parameter(ValueFromPipeline,Mandatory=$true)]
+             [string[]]$ComputerName = $env:COMPUTERNAME,
+             [parameter(Mandatory=$true)]
+             [string]$ReleasePath
        )
 
 process
     {
-        #$bDebug = 0
-        #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
-        #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
-        #$Computers = Get-Content $LoadServerFile
-        $sourcefile = "$ReleasePath\StayinFrontCRM-x64 12.3.2.535\StayinFrontCRM-Languages 13.0.0.1738.msi"
+        
+        $sourcefolder = (Get-ChildItem $ReleasePath -Filter "StayinFrontCRM*" -Directory).Name
+        $sourcefolder = "$ReleasePath\$sourcefolder"
 
-        $ReleasePath = "\\asm.lan\dcshare\App\SIF\Prod\Data\!CurrentRelease"
+        $sourcefile = (Get-ChildItem $sourcefolder -Filter "StayinFrontCRM-Languages*" -File).Name
+        $sourcefile = "$sourcefolder\$SourceFile"
 
         $jobscript = {
             Param($computer)
             
-             Invoke-Command  -ScriptBlock { cmd /c 'msiexec.exe /qn /i "C:\Temp\StayinFrontLanguageInstall\StayinFrontCRM-Languages 13.0.0.1738.msi" /l*vx C:\Temp\StayinFrontLanguages.txt' }
+             Invoke-Command  -ScriptBlock { cmd /c 'msiexec.exe /qn /i "C:\Temp\StayinFrontLanguageInstall\StayinFrontCRM-Languages.msi" /l*vx C:\Temp\StayinFrontLanguages.txt' }
         }
         
         ForEach ($computer in $ComputerName)
@@ -66,7 +67,7 @@ process
             if ($pscmdlet.ShouldProcess("$destinationfolder", "Create Directory")) {New-Item $destinationFolder -ItemType Directory |out-null}
 
             Write-Verbose -Message "Copying Install Package to $computer"
-            if ($pscmdlet.ShouldProcess("$destinationfolder", "Copy File $sourcefile")) {Copy-Item -Path $sourcefile -Destination $destinationFolder}
+            if ($pscmdlet.ShouldProcess("$destinationfolder", "Copy File $sourcefile")) {Copy-Item -Path $sourcefile -Destination "$destinationFolder\StayinFrontCRM-Languages.msi"}
             Write-Verbose -Message "Connecting to $computer"
             Start-Job -ScriptBlock $jobscript -ArgumentList $computer
         }
