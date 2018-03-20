@@ -46,7 +46,7 @@ function Copy-APK {
 	)
 process
     {
-        $PushPath -Replace ":", "$"
+        $PushPath = $PushPath -Replace ":", "$"
         $keepgoing = 0
 
         If ($Environment -eq 'Prod') {$keepgoing = 1}
