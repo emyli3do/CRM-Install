@@ -40,7 +40,7 @@ function Remove-AER {
 	)
 process
     {
-        ForEach ($computer in $computers)
+        ForEach ($computer in $ComputerName)
         {
             $NewPSSession = New-PSSession -ComputerName $computer
             Invoke-Command -Session $NewPSSession -ScriptBlock { Get-ChildItem -Path $Path -Filter "*.aer" | Remove-Item }
