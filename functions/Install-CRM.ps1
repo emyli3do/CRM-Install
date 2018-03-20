@@ -32,30 +32,33 @@ function Install-CRM {
 #>
        [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
        param (
-             [parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
-             [string]$Path
+             [parameter(ValueFromPipeline,Mandatory=$true)]
+             [string[]]$ComputerName = $env:COMPUTERNAME,
+             [parameter(Mandatory=$true)]
+             [string]$ReleasePath
        )
 
 process
     {
-        #$bDebug = 0
-        #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
-        #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
-        #$Computers = Get-Content $LoadServerFile
-        $sourcefile = "$ReleasePath\StayinFrontCRM-x64 12.3.2.535\StayinFrontCRM-Languages 13.0.0.1738.msi"
-
         $ReleasePath = "\\asm.lan\dcshare\App\SIF\Prod\Data\!CurrentRelease"
+        
+        $sourcefolder = (Get-ChildItem $ReleasePath -Filter "StayinFrontCRM*" -Directory).Name
+        $sourcefolder = "$ReleasePath\$sourcefolder"
+        
+        $sourcefile = (Get-ChildItem $sourcefolder -Filter "StayinFrontCRM-x64*" -File).Name
+        $sourcefile = "$sourcefolder\$SourceFile"
+
 
         $jobscript = {
             Param($computer)
             
-             Invoke-Command  -ScriptBlock { cmd /c 'msiexec.exe /qn /i "C:\Temp\StayinFrontLanguageInstall\StayinFrontCRM-Languages 13.0.0.1738.msi" /l*vx C:\Temp\StayinFrontLanguages.txt' }
+             Invoke-Command -ScriptBlock { cmd /c 'msiexec.exe /qn /i "C:\Temp\StayinFrontInstall\StayinFrontCRM-x64.msi" INSTALL_SERVER=1 INSTALL_CLIENT=1 INSTALL_APPSERVER=1 INSTALL_WORKFLOW=1 INSTALL_SYNCH=1 INSTALL_SYNCHSERVER=1 INSTALL_COMMSSERVER=1 INSTALL_SYNCHHTTP=1 INSTALL_WEB=1 INSTALL_TOUCH=1 INSTALL_WTS=1 /l*vx C:\Temp\StayinFrontCRM-x64InstallLog.txt' }
         }
         
         ForEach ($computer in $ComputerName)
         {
             
-            $destinationFolder = "\\$computer\C$\Temp\StayinFrontLanguageInstall"
+            $destinationFolder = "\\$computer\C$\Temp\StayinFrontInstall"
 
             if (Test-Path -path $destinationFolder)
             {
