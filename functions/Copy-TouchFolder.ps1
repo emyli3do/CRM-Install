@@ -29,9 +29,9 @@ function Copy-TouchFolder {
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
 	param (
-		[parameter(ValueFromPipeline,Mandatory=$true)]
-		[string[]]$ComputerName,
-		[parameter(Mandatory=$true)]
+        [parameter(ValueFromPipeline,Mandatory=$true)]
+        [string[]]$ComputerName,
+        [parameter(Mandatory=$true)]
         [string]$ReleasePath,
         [parameter(Mandatory=$true)]
         [string]$PushPath
