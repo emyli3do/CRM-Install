@@ -33,9 +33,7 @@ function Start-CRMAppService {
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
 	param (
 		[parameter(ValueFromPipeline,Mandatory=$true)]
-		[string[]]$ComputerName,
-		[PSCredential]$credential,
-		[string]$Path
+		[string[]]$ComputerName
 	)
 process
     {
