@@ -64,13 +64,30 @@
 	FunctionsToExport = @(
 		'Backup-Registry',
 		'Copy-APK',
+		'Copy-CRM',
+		'Copy-Model',
+		'Copy-TouchFolder',
+		'Delete-Cache',
+		'Delete-TouchASM',
 		'Get-ServiceSettings',
+		'Install-CRM',
 		'Install-CRMLanguage',
-		'Remove-CRMLanguage',
+		'Reboot-Server',
+		'Register-CRMOCX',
+		'Remove-AER',
 		'Remove-CRM',
+		'Remove-CRMLanguage',
+		'Remove-TouchFolder',
+		'Run-DataLoads',
+		'Set-Services',
+		'Set-ServicesBack',
+		'Set-StayinFrontAppPool',
+		'Start-CRMAppService',
 		'Start-IIS',
+		'Stop-CRMProcesses',
 		'Stop-IIS',
-		'Stop-Services'
+		'Stop-Services',
+		'Update-WebConfigImages'
 	)
 	
 	# Cmdlets to export from this module
