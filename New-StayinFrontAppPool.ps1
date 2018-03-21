@@ -40,7 +40,7 @@ function New-StayinFrontAppPool {
 		#[string]$Path Eventually add logging
 	)
 
-begin
+process
     {
     #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
     #$LoadServerFile = $LoadFolder + 'WEBServers.txt'
