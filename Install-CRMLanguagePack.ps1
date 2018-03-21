@@ -36,12 +36,8 @@ function Install-CRMLanguagePack {
 		[string]$Path
 	)
 
-begin
+process
     {
-        #$bDebug = 0
-        #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
-        #$LoadServerFile = $LoadFolder + 'ALLServersNoCitrix.txt'
-        #$Computers = Get-Content $LoadServerFile
         $sourcefile = "$ReleasePath\CRM_InstallFromHere-x64 12.2.2.168\StayinFrontCRM-Languages 13.0.0.1310.msi"
 
         $ReleasePath = "\\asm.lan\dcshare\App\SIF\Prod\Data\!CurrentRelease"
