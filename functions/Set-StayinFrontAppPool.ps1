@@ -1,4 +1,4 @@
-function New-StayinFrontAppPool {
+function Set-StayinFrontAppPool {
 <#
 	.SYNOPSIS
 		Create the StayinFront AppPool with default settings
