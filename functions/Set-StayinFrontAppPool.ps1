@@ -35,17 +35,12 @@ function New-StayinFrontAppPool {
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
 	param (
-		[parameter(ValueFromPipeline)]$ComputerName = $env:COMPUTERNAME,
-		[PSCredential]$Credential
-		#[string]$Path Eventually add logging
+		[parameter(ValueFromPipeline)]
+		$ComputerName = $env:COMPUTERNAME
 	)
 
 process
     {
-    #$LoadFolder = '\\NVSFTCTRLP01\C$\ASMTouchChecks\PROD\Environment\'
-    #$LoadServerFile = $LoadFolder + 'WEBServers.txt'
-    #$Computers       = Get-Content $LoadServerFile
-
     foreach ($Computer in $ComputerName)
     {
         if ($pscmdlet.ShouldProcess("$Computer", "Add and configure AppPool"))
@@ -53,7 +48,7 @@ process
             $NewPSSession = New-PSSession -ComputerName $Computer
             Invoke-Command -Session $NewPSSession -ScriptBlock { Import-Module WebAdministration }
             Invoke-Command -Session $NewPSSession -ScriptBlock { Set-ItemProperty -Path IIS:\AppPools\StayinFront -Name managedRuntimeVersion -Value 'v2.0' }
-            Invoke-Command -Session $NewPSSession -ScriptBlock { Set-ItemProperty -Path IIS:\AppPools\StayinFront -Name Failure.RapidFailProtection -Value 'False' }
+            Invoke-Command -Session $NewPSSession -ScriptBlock { Set-ItemProperty -Path IIS:\AppPools\StayinFront -Name Failure -Value @{RapidFailProtection='False'} }
             Invoke-Command -Session $NewPSSession -ScriptBlock { Set-ItemProperty -Path IIS:\AppPools\StayinFront -Name Recycling.PeriodicRestart.time -Value '00:00:00' }
             Invoke-Command -Session $NewPSSession -ScriptBlock { Set-ItemProperty -Path IIS:\AppPools\StayinFront -Name Recycling.PeriodicRestart.schedule -Value @{value="3:30"} }
             Invoke-Command -Session $NewPSSession -ScriptBlock { Set-ItemProperty -Path IIS:\AppPools\StayinFront -Name Recycling.PeriodicRestart.privateMemory -Value 1200000 }
