@@ -48,7 +48,7 @@ function Set-ServicesBack {
 		[string]$Path
 	)
 
-begin
+process
     {
 
         $ServiceStatuses = Import-Csv $Path
