@@ -70,6 +70,7 @@
 		'Copy-TouchFolder',
 		'Delete-Cache',
 		'Delete-TouchASM',
+		'Fix-DCOMPermissions',
 		'Get-ServiceSettings',
 		'Install-CRM',
 		'Install-CRMLanguage',
