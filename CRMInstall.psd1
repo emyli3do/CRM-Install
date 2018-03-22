@@ -62,6 +62,7 @@
 	
 	# Functions to export from this module
 	FunctionsToExport = @(
+		'Add-MimeType',
 		'Backup-Registry',
 		'Copy-APK',
 		'Copy-CRM',
