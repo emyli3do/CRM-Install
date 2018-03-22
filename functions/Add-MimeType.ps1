@@ -34,37 +34,48 @@ function Add-MimeType {
 		License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
-	param (
+    param
+    (
 		[parameter(ValueFromPipeline)]
-		[string[]]$ComputerName = $env:COMPUTERNAME
-    [parameter(mandatory=$true)]
-		[string]$FileExtension
-    [parameter(mandatory=$true)]
+		[string[]]$ComputerName = $env:COMPUTERNAME,
+        [parameter(mandatory=$true)]
+		[string]$FileExtension,
+        [parameter(mandatory=$true)]
 		[string]$MimeType
     
 	)
-begin
+    begin
     {
-        If (!($FileExtension.StartsWith("."))
+        If (!($FileExtension.StartsWith(".")))
         {
             $FileExtension = ".$FileExtension"
+            Write-Verbose "FileExtension changed to have period(.) at beginning"
+            Write-Verbose "FileExtension is now $FileExtension"
         }
     }
-process
+    process
     {
-    foreach ($Computer in $ComputerName)
-    {
-        if ($pscmdlet.ShouldProcess("$Computer", "Add Mime Type $fileextension"))
+        foreach ($Computer in $ComputerName)
         {
-            $NewPSSession = New-PSSession -ComputerName $Computer
-            Invoke-Command -Session $NewPSSession -ScriptBlock { Import-Module WebAdministration }
-            Invoke-Command -Session $NewPSSession -ScriptBlock {param($FileExtension,$MimeType)
-                IF ((Get-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST" -Filter "system.webServer/staticContent/mimeMap[@fileExtension='$FileExtension']" -Name fileExtension) -eq $null)
-                {
-                    Add-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST" "system.webServer/staticContent" -name collection -value @{fileExtension=$FileExtension; mimeType=,$MimeType}
-                }
-            } -ArgumentList $FileExtension,$MimeType
-            Remove-PSSession -Session $NewPSSession        
+            if ($pscmdlet.ShouldProcess("$Computer", "Add Mime Type $fileextension"))
+            {
+                $NewPSSession = New-PSSession -ComputerName $Computer
+                Invoke-Command -Session $NewPSSession -ScriptBlock { Import-Module WebAdministration }
+                Write-Verbose $FileExtension
+                Write-Verbose $MimeType
+                Invoke-Command -Session $NewPSSession -ScriptBlock {param([string]$FileExtension,[string]$MimeType)
+                    $ValueObject = New-Object PSObject -Property @{
+                        fileExtension = $FileExtension
+                        mimeType      = $MimeType
+                    }
+                    IF ((Get-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST" -Filter "system.webServer/staticContent/mimeMap[@fileExtension='$FileExtension']" -Name fileExtension) -eq $null)
+                    {
+                        Add-WebConfigurationProperty -PSPath "MACHINE/WEBROOT/APPHOST" "system.webServer/staticContent" -name collection -value $Object
+                    }
+                } -ArgumentList $FileExtension,$MimeType
+                Remove-PSSession -Session $NewPSSession        
+            }
         }
     }
 }
+
