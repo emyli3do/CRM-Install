@@ -90,6 +90,7 @@
 		'Stop-IIS',
 		'Stop-Services',
 		'Update-STEW',
+		'Update-TouchDBAD',
 		'Update-WebConfigImages'
 	)
 	
