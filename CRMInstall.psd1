@@ -89,6 +89,7 @@
 		'Stop-CRMProcesses',
 		'Stop-IIS',
 		'Stop-Services',
+		'Update-STEW',
 		'Update-WebConfigImages'
 	)
 	
