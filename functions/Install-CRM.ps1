@@ -36,8 +36,7 @@ function Install-CRM {
              [string[]]$ComputerName = $env:COMPUTERNAME,
              [string]$ReleasePath = "\\asm.lan\dcshare\App\SIF\Prod\Data\!CurrentRelease"
        )
-
-process
+    begin
     {
         $sourcefolder = (Get-ChildItem $ReleasePath -Filter "StayinFrontCRM*" -Directory).Name
         $sourcefolder = "$ReleasePath\$sourcefolder"
@@ -51,24 +50,23 @@ process
             
              Invoke-Command -ScriptBlock { cmd /c 'msiexec.exe /qn /i "C:\Temp\StayinFrontInstall\StayinFrontCRM-x64.msi" INSTALL_SERVER=1 INSTALL_CLIENT=1 INSTALL_APPSERVER=1 INSTALL_WORKFLOW=1 INSTALL_SYNCH=1 INSTALL_SYNCHSERVER=1 INSTALL_COMMSSERVER=1 INSTALL_SYNCHHTTP=1 INSTALL_WEB=1 INSTALL_TOUCH=1 INSTALL_WTS=1 /l*vx C:\Temp\StayinFrontCRM-x64InstallLog.txt' }
         }
-        
-        ForEach ($computer in $ComputerName)
+    }
+    process
+    {
+        $computer = $_
+        $destinationFolder = "\\$computer\C$\Temp\StayinFrontInstall"
+
+        if (Test-Path -path $destinationFolder)
         {
-            
-            $destinationFolder = "\\$computer\C$\Temp\StayinFrontInstall"
-
-            if (Test-Path -path $destinationFolder)
-            {
-                Write-Verbose -Message "Removing Old Folder on $computer"
-                if ($pscmdlet.ShouldProcess("$destinationfolder", "Remove Directory")) {Remove-Item $destinationFolder -Recurse}
-            }
-            Write-Verbose -Message "Creating Install Package Folder on $computer"
-            if ($pscmdlet.ShouldProcess("$destinationfolder", "Create Directory")) {New-Item $destinationFolder -ItemType Directory |out-null}
-
-            Write-Verbose -Message "Copying Install Package to $computer"
-            if ($pscmdlet.ShouldProcess("$destinationfolder", "Copy File $sourcefile")) {Copy-Item -Path $sourcefile -Destination "$destinationFolder\StayinFrontCRM-x64.msi"}
-            Write-Verbose -Message "Connecting to $computer"
-            Start-Job -ScriptBlock $jobscript -ArgumentList $computer
+            Write-Verbose -Message "Removing Old Folder on $computer"
+            if ($pscmdlet.ShouldProcess("$destinationfolder", "Remove Directory")) {Remove-Item $destinationFolder -Recurse}
         }
+        Write-Verbose -Message "Creating Install Package Folder on $computer"
+        if ($pscmdlet.ShouldProcess("$destinationfolder", "Create Directory")) {New-Item $destinationFolder -ItemType Directory |out-null}
+
+        Write-Verbose -Message "Copying Install Package to $computer"
+        if ($pscmdlet.ShouldProcess("$destinationfolder", "Copy File $sourcefile")) {Copy-Item -Path $sourcefile -Destination "$destinationFolder\StayinFrontCRM-x64.msi"}
+        Write-Verbose -Message "Connecting to $computer"
+        Start-Job -ScriptBlock $jobscript -ArgumentList $computer
     }
 }
