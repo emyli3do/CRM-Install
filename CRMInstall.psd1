@@ -89,6 +89,7 @@
 		'Stop-CRMProcesses',
 		'Stop-IIS',
 		'Stop-Services',
+		'Test-InstallState',
 		'Update-STEW',
 		'Update-TouchDBAD',
 		'Update-WebConfigImages'
