@@ -44,7 +44,7 @@ function Remove-CRM {
     }
 	process
 	{
-        $CRMLanguagePack = New-PSSession -ComputerName $ComputerName        
+        $CRMLanguagePack = New-PSSession -ComputerName $_        
 
         Invoke-Command -Session $CRMLanguagePack -ScriptBlock { $app = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -match "StayinFront CRM"} }
         Invoke-Command -Session $CRMLanguagePack -ScriptBlock { $cmd = "msiexec.exe /x " + $app.IdentifyingNumber + " /qn /L*vx C:\Temp\StayinFrontCRM-x64Uninstall.txt" }
