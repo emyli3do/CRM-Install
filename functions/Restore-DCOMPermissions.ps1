@@ -1,4 +1,4 @@
-function Fix-DCOMPermissions {
+function Restore-DCOMPermissions {
 <#
     .SYNOPSIS
         Copies the model folder contents to the model folder on the server.
