@@ -76,7 +76,7 @@ function Install-CRMLanguagePack {
         #Action
         $FilePath = (Get-Module -ListAvailable CRMInstall).path
         $FilePath = $FilePath | Split-Path -Parent
-        $filepath = "$FilePath\functions\InstallCRMLanguagesPerServer.ps1"
+        $filepath = "$FilePath\functions\Install-CRMLanguagePackPerServer.ps1"
         Invoke-Command -ComputerName $computer -FilePath $filepath
 
     }
