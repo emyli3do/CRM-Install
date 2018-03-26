@@ -40,7 +40,7 @@ process
     {
         If ($pscmdlet.ShouldProcess("$computer", "Delete TouchASM"))
         {
-            Remove-Item -Path \\$computer\C$\inetpub\Touch\TouchASM
+            Remove-Item -Path \\$computer\C$\inetpub\Touch\TouchASM | Out-Null
         }
     }
 }
