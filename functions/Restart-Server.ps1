@@ -1,4 +1,4 @@
-function Reboot-Server {
+function Restart-Server {
 <#
 	.SYNOPSIS
 		Create the StayinFront AppPool with default settings
