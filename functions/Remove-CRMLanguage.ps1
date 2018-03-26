@@ -33,16 +33,23 @@ function Remove-CRMLanguage {
 		Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
 		License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
-    param (
-        [parameter(ValueFromPipeline)][string[]]$ComputerName = $env:COMPUTERNAME
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
+param
+	(
+        [parameter(ValueFromPipeline,mandatory=$true)]
+        [string[]]$ComputerName
     )
-    begin
+begin
     {
 
     }
-    process
+process
     {
-        Invoke-WmiMethod -Path "Win32_Product.Name='StayinFront CRM'" -Computer $_ -Name Uninstall
-	}
+        Write-Verbose "UnInstalling CRM Language Pack from $_"
+        $CRMLanguagePack = New-PSSession -ComputerName $_
+        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { $app = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -match "StayinFront CRM language pack"} }
+        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { $cmd = "msiexec.exe /x " + $app.IdentifyingNumber + " /qn /L*vx C:\Temp\StayinFrontCRMLanguagePackUninstall.txt" }
+        Invoke-Command -Session $CRMLanguagePack -ScriptBlock { cmd /c $cmd }
+        Remove-PSSession -Session $CRMLanguagePack
+    }
 }
