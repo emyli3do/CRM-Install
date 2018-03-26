@@ -28,7 +28,8 @@ function Copy-TouchFolder {
         License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
-	param (
+param
+    (
         [parameter(ValueFromPipeline,Mandatory=$true)]
         [string[]]$ComputerName,
         [parameter(Mandatory=$true)]
@@ -36,15 +37,13 @@ function Copy-TouchFolder {
         [parameter(Mandatory=$true)]
         [string]$PushPath
 	)
-    process
+process
     {
-        $PushPath -Replace ":", "$"
-        foreach ($computer in $ComputerName)
+        $PushPath = $PushPath -Replace ":", "$"
+        $computer = $_
+        If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy TouchFolder"))
         {
-            If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy CRM"))
-            {
-                Copy-Item -Path $ReleasePath\Touch\ -Destination \\$computer\$PushPath\ -Recurse -Force
-            }
+            Copy-Item -Path $ReleasePath\Touch\ -Destination \\$computer\$PushPath\ -Recurse -Force
         }
     }
 }
