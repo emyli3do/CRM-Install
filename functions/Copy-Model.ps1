@@ -36,7 +36,7 @@ function Copy-Model {
         Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
         License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
-	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
 	param (
 		[parameter(ValueFromPipeline,Mandatory=$true)]
 		[string[]]$ComputerName,
@@ -48,13 +48,11 @@ function Copy-Model {
 	)
 process
     {
-        $PushPath -Replace ":", "$"
-        foreach ($computer in $ComputerName)
+        $PushPath = $PushPath -Replace ":", "$"
+        $computer = $_
+        If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy Model"))
         {
-            If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy Model"))
-            {
-                Copy-Item -Path "$ReleasePath\Model\" -Destination \\$computer\$PushPath\ -Recurse -Force
-            }
+            Copy-Item -Path "$ReleasePath\Model\" -Destination \\$computer\$PushPath\ -Recurse -Force
         }
     }
 }
