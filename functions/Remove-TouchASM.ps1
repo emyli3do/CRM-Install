@@ -1,4 +1,4 @@
-function Delete-TouchASM {
+function Remove-TouchASM {
 <#
 	.SYNOPSIS
 		Deletes Cache files that should be re-created after release.
@@ -32,16 +32,15 @@ function Delete-TouchASM {
 		[parameter(ValueFromPipeline,Mandatory=$true)]
 		[string[]]$ComputerName
 	)
-
+begin
+	{
+	    $BaseFolder = $BaseFolder -Replace ":", "$"
+	}
 process
     {
-        $BaseFolder = $BaseFolder -Replace ":", "$"
-        foreach ($computer in $ComputerName)
+        If ($pscmdlet.ShouldProcess("$computer", "Delete TouchASM"))
         {
-            If ($pscmdlet.ShouldProcess("$computer", "Delete TouchASM"))
-            {
-                Remove-Item -Path \\$computer\C$\inetpub\Touch\TouchASM
-            }
+            Remove-Item -Path \\$computer\C$\inetpub\Touch\TouchASM
         }
     }
 }
