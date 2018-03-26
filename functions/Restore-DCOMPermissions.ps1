@@ -40,7 +40,8 @@ process
             {
                 $NewPSSession = New-PSSession -ComputerName $computer
                 Invoke-Command -Session $NewPSSession -ScriptBlock {
-                    Remove-ItemProperty -Path "HKCR:\Wow6432Node\AppID\{C8D13ACF-4DA7-11D2-9C74-00104BC85282}" -name AccessPermission
+                    New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT
+		    Remove-ItemProperty -Path "HKCR:\Wow6432Node\AppID\{C8D13ACF-4DA7-11D2-9C74-00104BC85282}" -name AccessPermission
                     Remove-ItemProperty -Path "HKCR:\Wow6432Node\AppID\{C8D13ACF-4DA7-11D2-9C74-00104BC85282}" -name LaunchPermission
                 }
                 Remove-PSSession -Session $NewPSSession
