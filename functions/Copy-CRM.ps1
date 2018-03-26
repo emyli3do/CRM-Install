@@ -47,7 +47,7 @@ function Copy-CRM {
 	)
 process
     {
-        $PushPath -Replace ":", "$"
+        $PushPath = $PushPath -Replace ":", "$"
         foreach ($computer in $ComputerName)
         {
             If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy CRM"))
