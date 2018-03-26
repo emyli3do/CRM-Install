@@ -1,4 +1,4 @@
-function Run-DataLoads {
+function Invoke-DataLoads {
 <#
     .SYNOPSIS
         Copies the CRM folder contents to the CRM folder on the server.
