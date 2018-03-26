@@ -36,7 +36,7 @@ function Set-ServicesBack {
 		Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
 		License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
-	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
 	param (
 		[parameter(Mandatory=$true,ValueFromPipeline)]
 		[string[]]$ComputerName = $env:COMPUTERNAME,
