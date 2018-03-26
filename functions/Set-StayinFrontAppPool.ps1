@@ -33,15 +33,14 @@ function Set-StayinFrontAppPool {
 		Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
 		License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
-	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
-	param (
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
+param
+    (
 		[parameter(ValueFromPipeline)]
 		$ComputerName = $env:COMPUTERNAME
 	)
 
 process
-    {
-    foreach ($Computer in $ComputerName)
     {
         if ($pscmdlet.ShouldProcess("$Computer", "Add and configure AppPool"))
         {
