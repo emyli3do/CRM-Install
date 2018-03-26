@@ -36,7 +36,7 @@ function Copy-CRM {
         Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
         License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
-	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
+	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
 	param (
 		[parameter(ValueFromPipeline,Mandatory=$true)]
 		[string[]]$ComputerName,
@@ -48,12 +48,10 @@ function Copy-CRM {
 process
     {
         $PushPath = $PushPath -Replace ":", "$"
-        foreach ($computer in $ComputerName)
+        $computer = $_
+        If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy CRM"))
         {
-            If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy CRM"))
-            {
-                Copy-Item -Path "$ReleasePath\CRM\" -Destination \\$computer\$PushPath\ -Recurse -Force
-            }
+        Copy-Item -Path "$ReleasePath\CRM\" -Destination \\$computer\$PushPath\ -Recurse -Force
         }
     }
 }
