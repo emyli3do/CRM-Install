@@ -47,7 +47,7 @@ function Remove-TouchFolder {
         ForEach ($computer in $ComputerName)
         {
             $NewPSSession = New-PSSession -ComputerName $computer
-            Invoke-Command -Session $NewPSSession -ScriptBlock { Remove-Item –Path "C:\Program Files (x86)\StayinFront\Touch" -Force -Recurse -ErrorAction SilentlyContinue }
+            Invoke-Command -Session $NewPSSession -ScriptBlock { Remove-Item -Path "C:\Program Files (x86)\StayinFront\Touch" -Force -Recurse -ErrorAction SilentlyContinue }
             Remove-PSSession -Session $NewPSSession
         }
     }
