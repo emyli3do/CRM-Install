@@ -1,4 +1,4 @@
-function Delete-Cache {
+function Remove-Cache {
 <#
 	.SYNOPSIS
 		Deletes Cache files that should be re-created after release.
@@ -34,18 +34,17 @@ function Delete-Cache {
         [parameter(Mandatory=$true)]
         [string]$BaseFolder
 	)
-
-process
+begin
     {
         $BaseFolder = $BaseFolder -Replace ":", "$"
-        foreach ($computer in $ComputerName)
+    }
+process
+    {
+        If ($pscmdlet.ShouldProcess("$computer", "Delete Cache"))
         {
-            If ($pscmdlet.ShouldProcess("$computer", "Delete Cache"))
-            {
-                Remove-Item -Path \\$computer\$BaseFolder\ServerModels\*
-                Remove-Item -Path \\$computer\$BaseFolder\ClientModels\32\*
-                Remove-Item -Path \\$computer\$BaseFolder\ClientModels\64\*
-            }
+            Remove-Item -Path \\$computer\$BaseFolder\ServerModels\*
+            Remove-Item -Path \\$computer\$BaseFolder\ClientModels\32\*
+            Remove-Item -Path \\$computer\$BaseFolder\ClientModels\64\*
         }
     }
 }
