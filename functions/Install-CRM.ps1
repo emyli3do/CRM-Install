@@ -80,7 +80,7 @@ function Install-CRM {
 
         Write-Verbose -Message "Installing to $computer"
         #Action
-        $filepath = "$PSScriptRoot\InstallCRMPerServer.ps1"
+        $filepath = "$PSScriptRoot\Install-CRMPerServer.ps1"
         Invoke-Command -ComputerName $computer -FilePath $filepath
     }
 }
