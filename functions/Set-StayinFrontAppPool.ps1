@@ -42,6 +42,7 @@ param
 
 process
     {
+    	$Computer = $_
         if ($pscmdlet.ShouldProcess("$Computer", "Add and configure AppPool"))
         {
             $NewPSSession = New-PSSession -ComputerName $Computer
