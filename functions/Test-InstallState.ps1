@@ -38,7 +38,10 @@ function Test-InstallState {
         Write-Verbose "Connecting to $_"
         $TestInstallState = New-PSSession -ComputerName $_
 	    $InstalledSoftware += Invoke-Command -Session $TestInstallState -ScriptBlock {param($SoftwareName)
-		    Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where{$_.DisplayName -eq $SoftwareName}
+            foreach ($Software in $SoftwareName)
+            {
+                Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where{$_.DisplayName -eq $Software}
+            }
         } -ArgumentList $SoftwareName
         Write-Verbose "Disconnecting from $_"
         Remove-PSSession -Session $TestInstallState
