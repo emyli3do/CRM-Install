@@ -79,6 +79,7 @@
 		'Remove-Cache',
 		'Remove-CRM',
 		'Remove-CRMLanguage',
+		'Remove-InstallFiles',
 		'Remove-TouchASM',
 		'Remove-TouchFolder',
 		'Restart-Server',
