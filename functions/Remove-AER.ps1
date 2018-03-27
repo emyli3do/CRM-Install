@@ -43,7 +43,7 @@ process
         ForEach ($computer in $ComputerName)
         {
             $NewPSSession = New-PSSession -ComputerName $computer
-            Invoke-Command -Session $NewPSSession -ScriptBlock { Get-ChildItem -Path $Path -Filter "*.aer" | Remove-Item }
+            Invoke-Command -Session $NewPSSession -ScriptBlock {params($Path) Get-ChildItem -Path $Path -Filter "*.aer" | Remove-Item } -ArgumentList $Path
             Remove-PSSession -Session $NewPSSession
         }
     }
