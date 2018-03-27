@@ -26,15 +26,25 @@ function Remove-InstallFiles {
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
 	param (
 		[parameter(ValueFromPipeline,Mandatory=$true)]
-		[string[]]$ComputerName,
+		[string[]]$ComputerName
 	)
 process
     {
         $computer = $_
+        If (Test-Path \\$computer\C$\Temp\StayinFrontInstall ) {Remove-Item -Path \\$computer\C$\Temp\StayinFrontInstall -Recurse -Force | Out-Null}
+        If (Test-Path \\$computer\C$\Temp\StayinFrontLanguageInstall) {Remove-Item -Path \\$computer\C$\Temp\StayinFrontLanguageInstall -Recurse -Force | Out-Null}
         
-        Remove-Item -Path \\$computer\C$\StayinFrontInstall | Out-Null
-        Remove-Item -Path \\$computer\C$\StayinFrontLanguageInstall | Out-Null
-        Unregister-ScheduledTask -TaskName "Install StayinFront CRM Languages" -Confirm:$false
-        Unregister-ScheduledTask -TaskName "Install StayinFront CRM" -Confirm:$false
+        $InstallFiles = New-PSSession -ComputerName $_
+        Invoke-Command -Session $InstallFiles -ScriptBlock {
+            If (Get-ScheduledTask -TaskName "Install StayinFront CRM Languages" -ErrorAction SilentlyContinue)
+            {
+                Invoke-Command -ScriptBlock {Unregister-ScheduledTask -TaskName "Install StayinFront CRM Languages" -Confirm:$false}
+            }
+            If (Get-ScheduledTask -TaskName "Install StayinFront CRM" -ErrorAction SilentlyContinue)
+            {
+                Invoke-Command -ScriptBlock {Unregister-ScheduledTask -TaskName "Install StayinFront CRM" -Confirm:$false}
+            }
+        }
+        Remove-PSSession -Session $InstallFiles
     }
 }
