@@ -33,66 +33,69 @@ function Update-WebConfigImages {
         License: GNU GPL v3 https://opensource.org/licenses/GPL-3.0
 #>
 	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
-	param
+param
     (
-		[parameter(ValueFromPipeline,Mandatory=$true)]
+        [parameter(ValueFromPipeline,Mandatory=$true)]
 		[string[]]$ComputerName,
 		[parameter(Mandatory=$true)]
         [string]$ReleasePath,
-        [parameter(Mandatory=$true)]
+        [ValidateSet("Prod","UAT","QA","Dev")]
         [string]$Environment
 	)
-    process
+process
     {
-        $keepgoing = 0
+        $computer = $_
+        
+        Write-Verbose "Changing web.config on computer $computer"
 
-        If ($Environment -eq 'Prod') {$keepgoing = 1}
-        If ($Environment -eq 'UAT') {$keepgoing = 1}
-        If ($Environment -eq 'QA') {$keepgoing = 1}
-        If ($Environment -eq 'Dev') {$keepgoing = 1}
-
-        If ($keepgoing -eq 1)
+        $destinationFolder = "\\$computer\C$\inetpub\Touch\TouchASM"
+        $DestinationFile = "$DestinationFolder\web.config"
+        
+        $ReadFileName = "$ReleasePath\ImagesFolder" + $Environment + ".txt"
+        
+        If (Test-Path $ReadFileName)
         {
-            $ReadFileName = "$ReleasePath\ImagesFolder" + $Environment + ".txt"
-            If (Test-Path $ReadFileName)
-            {
-                $FileEnvironment = Get-Content ($ReadFileName)
+            $FileEnvironment = Get-Content ($ReadFileName)
+            Write-Verbose "Images Folder Located at: $FileEnvironment"
 
-                $FilePath = "C:\inetpub\Touch\TouchASM\web.config"
-                $bLineToChange = 0
-                $FileOriginal = Get-Content ($FilePath)
-                [String[]] $FileModified = @()
-                Foreach ($line in $FileOriginal)
+            $bLineToChange = 0
+            $FileOriginal = Get-Content ($DestinationFile)
+            [String[]] $FileModified = ""
+            $OnLine = 0
+            
+            $ModifyLine = "        <value>"
+            $ModifyLine += $FileEnvironment
+            $ModifyLine += "</value>"
+            
+            Foreach ($line in $FileOriginal)
+                {
+                    If ($line -ne "")
                     {
+                        $OnLine += 1
                         If ($bLineToChange -eq 1)
                         {
-                            $FileModified +=  "        <value>" + $FileEnvironment + "</value>`n"
+                            $FileModified +=  "$ModifyLine"
                             $bLineToChange = 0
+                            
+                            Write-Verbose "Line $OnLine Changed from $line to $ModifyLine"
                         }
                         Else
                         {
                             If ($line -like "*<setting name=`"UploadedFilesPath`" serializeAs=`"String`">*")
                             {
                                 $bLineToChange = 1
-                                $FileModified += "$line`n"
                             }
-                            Else
-                            {
-                                $FileModified += "$line`n"
-                            }
+                            $FileModified += "$line"
                         }
-                    }  
+                    }
+                }  
 
-                Set-Content $Filepath $FileModified
-            }
-            Else
-            {
-                Write-Error -Message "Error: Images File not found." -Category InvalidArgument
-            }
+            Write-Verbose "Writing File with new content"
+            Set-Content $Filepath $FileModified
         }
         Else
         {
-            Write-Error -Message "Error: Unknown Environment Specification." -Category InvalidArgument
+            Write-Error -Message "Error: Images File not found." -Category InvalidArgument
         }
     }
 }
