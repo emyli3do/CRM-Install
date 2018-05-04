@@ -40,7 +40,9 @@ process
     {
         foreach ($computer IN $ComputerName)
         {
-            Copy-Item -Path \\asm.lan\dcshare\app\sif\prod\data\release\iq-files\Pre-reqs\STEW -Destination \\$computer\C$\Temp\StayinFront\Pre-reqs\
+            Copy-Item -Path \\asm.lan\dcshare\app\sif\prod\data\release\iq-files\Pre-reqs\STEW -Destination \\$computer\C$\Temp\StayinFront\Pre-reqs\ -Force -Recurse
+            Copy-Item -Path \\$computer\C$\Temp\StayinFront\Pre-reqs\STEW \\$computer\C$\inetpub\wwwroot\ -Force -Recurse
+
         }
     }
 }
