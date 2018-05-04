@@ -41,7 +41,7 @@ process
         foreach ($computer IN $ComputerName)
         {
             Copy-Item -Path \\asm.lan\dcshare\app\sif\prod\data\release\iq-files\Pre-reqs\TouchDB.reg -Destination \\$computer\C$\Temp\
-            Invoke-Command -ComputerName $computer -ScriptBlock {cmd /c 'REGEDIT.EXE /S C:\Temp\StayinFront\Pre-reqs\ASM.reg'}
+            Invoke-Command -ComputerName $computer -ScriptBlock {cmd /c 'REGEDIT.EXE /S C:\Temp\TouchDB.reg'}
             Remove-Item \\$computer\C$\Temp\TouchDB.reg
         }
     }
