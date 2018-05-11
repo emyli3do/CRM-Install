@@ -38,9 +38,9 @@ begin
 	}
 process
     {
-        If ($pscmdlet.ShouldProcess("$computer", "Delete TouchASM"))
+        If ($pscmdlet.ShouldProcess("$ComputerName", "Delete TouchASM"))
         {
-            Remove-Item -Path \\$computer\C$\inetpub\Touch\TouchASM | Out-Null
+            Remove-Item -Path \\$ComputerName\C$\inetpub\Touch\TouchASM -Recurse | Out-Null
         }
     }
 }
