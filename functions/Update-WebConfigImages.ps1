@@ -60,7 +60,6 @@ process
 
             $bLineToChange = 0
             $FileOriginal = Get-Content ($DestinationFile)
-            [String[]] $FileModified = ""
             $OnLine = 0
             
             $ModifyLine = "        <value>"
@@ -74,7 +73,7 @@ process
                         $OnLine += 1
                         If ($bLineToChange -eq 1)
                         {
-                            $FileModified +=  "$ModifyLine"
+                            [String[]]$FileModified +=  "$ModifyLine"
                             $bLineToChange = 0
                             
                             Write-Verbose "Line $OnLine Changed from $line to $ModifyLine"
@@ -85,7 +84,7 @@ process
                             {
                                 $bLineToChange = 1
                             }
-                            $FileModified += "$line"
+                            [String[]]$FileModified += "$line"
                         }
                     }
                 }  
