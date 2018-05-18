@@ -91,6 +91,8 @@ process
 
             Write-Verbose "Writing File with new content"
             Set-Content $DestinationFile $FileModified
+	    
+	    Remove-Variable $FileModified
         }
         Else
         {
