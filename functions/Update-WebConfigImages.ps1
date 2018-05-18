@@ -92,7 +92,7 @@ process
             Write-Verbose "Writing File with new content"
             Set-Content $DestinationFile $FileModified
 	    
-	    Remove-Variable $FileModified
+	    Clear-Variable -Name FileModified
         }
         Else
         {
