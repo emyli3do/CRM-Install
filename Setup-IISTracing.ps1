@@ -11,6 +11,7 @@ ForEach ($WebComputer in $WebComputers)
     $NewPSSession = New-PSSession -ComputerName $WebComputer
     Invoke-Command -Session $NewPSSession -ScriptBlock {Install-WindowsFeature Web-Http-Tracing}
     Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set site ""Default Web Site"" -traceFailedRequestsLogging.enabled:""true"" /commit:apphost"}
+    Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set site ""Default Web Site"" -traceFailedRequestsLogging.maxLogFiles:""500"" /commit:apphost"}
     Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /-""[path='*']""" | Out-NULL}
     Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /+""[path='*']"""}
     Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /+""[path='*'].traceAreas.[provider='ASP',verbosity='Verbose']"""}
