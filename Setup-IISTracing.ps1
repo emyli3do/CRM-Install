@@ -17,7 +17,7 @@ ForEach ($WebComputer in $WebComputers)
     Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /+""[path='*'].traceAreas.[provider='ASPNET',areas='Infrastructure,Module,Page,AppServices',verbosity='Verbose']"""}
     Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /+""[path='*'].traceAreas.[provider='ISAPI Extension',verbosity='Verbose']"""}
     Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /+""[path='*'].traceAreas.[provider='WWW Server',areas='Authentication,Security,Filter,StaticFile,CGI,Compression,Cache,RequestNotifications,Module,FastCGI,WebSocket',verbosity='Verbose']"""}
-    Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /[path='*'].failureDefinitions.statusCodes:""401.4"""}
+    Invoke-Command -Session $NewPSSession -ScriptBlock {cmd /c "C:\Windows\system32\inetsrv\appcmd.exe set config ""Default Web Site"" -section:system.webServer/tracing/traceFailedRequests /[path='*'].failureDefinitions.statusCodes:""401.4 , 500"""}
     Remove-PSSession -Session $NewPSSession
     Start-Sleep -Seconds 10 
 }
