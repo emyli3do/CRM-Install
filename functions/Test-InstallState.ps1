@@ -40,7 +40,7 @@ function Test-InstallState {
 	    foreach ($Software in $SoftwareName)
     	{
             $InstalledSoftware += Invoke-Command -Session $TestInstallState -ScriptBlock {param($SoftwareName)
-                Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where{$_.DisplayName -eq $Software}
+                Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where{$_.DisplayName -eq $SoftwareName}
             } -ArgumentList $SoftwareName
         }
         Write-Verbose "Disconnecting from $_"
