@@ -44,7 +44,7 @@ function Register-CRMOCX {
     }
 	process
 	{
-        foreach ($computer in $computers)
+        foreach ($computer in $computerName)
         {
             Invoke-Command -ComputerName $computer -ScriptBlock {cmd /c "C:\Program Files (x86)\StayinFront\CRM\Reg_OCX.cmd"}
         }  
