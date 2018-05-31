@@ -70,6 +70,7 @@ process
                         {
                             If ($pscmdlet.ShouldProcess("$Computer", "Set $service to file settings"))
                             {
+			    	If ($ServiceStatus.startname -ne "LocalSystem")
                                 {
                                     $params = @{
                                       "Namespace" = "root\CIMV2"
@@ -85,7 +86,7 @@ process
                                       $null,
                                       $null,
                                       $null,
-                                      'ASM\SIF.Service',
+                                      $credential.UserName,
                                       $credential.GetNetworkCredential().Password,
                                       $null,
                                       $null,
