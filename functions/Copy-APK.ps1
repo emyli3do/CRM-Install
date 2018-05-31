@@ -57,7 +57,7 @@ process
 
         If ($keepgoing -eq 1)
         {
-            foreach ($computer in $Computers)
+            foreach ($computer in $ComputerName)
             {
                 If ($pscmdlet.ShouldProcess("Item: $ReleasePath\APK\$Environment\ Destination: \\$computer\$PushPath\", "Copy APK"))
                 {
