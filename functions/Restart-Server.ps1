@@ -44,9 +44,9 @@ function Restart-Server {
     }
 	process
 	{
-        If ($computer -ne $env:COMPUTERNAME)
+        If ($ComputerName -ne $env:COMPUTERNAME)
         {
-            Restart-Computer -ComputerName $computer -Force
+            Restart-Computer -ComputerName $ComputerName -Force
         }
     }
 }
