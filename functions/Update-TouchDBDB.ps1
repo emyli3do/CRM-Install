@@ -1,10 +1,10 @@
 function Update-TouchDBAD {
 <#
 	.SYNOPSIS
-		Updates the TouchDB Security Provider to use AD Authentication for the TouchDB security provider
+		Updates the TouchDB Security Provider to use DB Authentication for the TouchDB security provider 
 	
 	.DESCRIPTION
-		Updates the TouchDB Security Provider to use AD Authentication for the TouchDB security provider
+		Updates the TouchDB Security Provider to use DB Authentication for the TouchDB security provider 
 	
 	.PARAMETER ComputerName
 		The target Server(s). Defaults to localhost.
@@ -16,12 +16,12 @@ function Update-TouchDBAD {
 		If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
 	
 	.EXAMPLE
-		Update-TouchDBAD -ComputerName Server1
+		Update-TouchDBADDB -ComputerName Server1
 		
-		Updates the TouchDB Security Provider to use AD Authentication for the TouchDB security provider on Server1
+		Updates the TouchDB Security Provider to use DB Authentication for the TouchDB security provider on Server1
 	
 	.NOTES
-		Tags: Services
+		Tags: StayinFront Security
 		
 		Website: N/A
 		Copyright: (C) Josh Simar, josh.simar@advantagesolutions.net
@@ -40,9 +40,9 @@ process
     {
         foreach ($computer IN $ComputerName)
         {
-            Copy-Item -Path \\asm.lan\dcshare\app\sif\prod\data\release\iq-files\Pre-reqs\TouchDBAD.reg -Destination \\$computer\C$\Temp\
-            Invoke-Command -ComputerName $computer -ScriptBlock {cmd /c 'REGEDIT.EXE /S C:\Temp\TouchDBAD.reg'}
-            Remove-Item \\$computer\C$\Temp\TouchDBAD.reg
+            Copy-Item -Path \\asm.lan\dcshare\app\sif\prod\data\release\iq-files\Pre-reqs\TouchDBDB.reg -Destination \\$computer\C$\Temp\
+            Invoke-Command -ComputerName $computer -ScriptBlock {cmd /c 'REGEDIT.EXE /S C:\Temp\TouchDBDB.reg'}
+            Remove-Item \\$computer\C$\Temp\TouchDBDB.reg
         }
     }
 }

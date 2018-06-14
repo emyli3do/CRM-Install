@@ -95,6 +95,7 @@
 		'Test-InstallState',
 		'Update-STEW',
 		'Update-TouchDBAD',
+		'Update-TouchDBDB',
 		'Update-WebConfigImages'
 	)
 	
