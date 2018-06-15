@@ -1,4 +1,4 @@
-function Update-TouchDBAD {
+function Update-TouchDBDB {
 <#
 	.SYNOPSIS
 		Updates the TouchDB Security Provider to use DB Authentication for the TouchDB security provider 
