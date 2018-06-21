@@ -75,7 +75,7 @@ process
                                     $params = @{
                                       "Namespace" = "root\CIMV2"
                                       "Class" = "Win32_Service"
-                                      "Filter" = "ServiceName='$service'"
+                                      "Filter" = "Name='$service'"
                                     }
     
                                     $WMIservice = Get-WmiObject @params -ComputerName $computer
