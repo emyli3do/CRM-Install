@@ -58,7 +58,13 @@ function Install-CRMLanguagePack {
         If ($FileHashCurrentRelease -ne $FileHashServer)
         {
             Write-Verbose -Message "Removing Old Folder on $computer"
-            if ($pscmdlet.ShouldProcess("$destinationfolder", "Remove Directory")) {Remove-Item $destinationFolder -Recurse}
+            if ($pscmdlet.ShouldProcess("$destinationfolder", "Remove Directory"))
+            {
+              If (Test-Path $destinationFolder)
+              {
+                     Remove-Item $destinationFolder -Recurse
+              }
+            }
             
             Write-Verbose -Message "Creating Install Package Folder on $computer"
             if ($pscmdlet.ShouldProcess("$destinationfolder", "Create Directory")) {New-Item $destinationFolder -ItemType Directory |out-null}
