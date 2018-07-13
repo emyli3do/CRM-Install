@@ -42,13 +42,19 @@ process
         foreach ($computer in $ComputerName)
         {
             Write-Verbose "Connecting to $computer"
-            $NewPSSession = New-PSSession -ComputerName $computer
+	    IF ($computer -ne $env:ComputerName) {$NewPSSession = New-PSSession -ComputerName $computer}
             foreach ($Service in $ServiceName)
             {
                 Write-Verbose "Stopping $service on $computer"
-                Invoke-Command -Session $NewPSSession -ScriptBlock {param($Service)
-                    Stop-Service -Name $Service -Force -ErrorAction SilentlyContinue
-                } -ArgumentList $Service
+                IF ($computer -ne $env:ComputerName) {
+			Invoke-Command -Session $NewPSSession -ScriptBlock {param($Service)
+                    	Stop-Service -Name $Service -Force -ErrorAction SilentlyContinue
+                	} -ArgumentList $Service
+		}
+		Else
+		{
+			Stop-Service -Name $Service -Force -ErrorAction SilentlyContinue
+		}
             }
             Write-Verbose "Disconnecting from $computer"
             Remove-PSSession -Session $NewPSSession
