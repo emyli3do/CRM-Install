@@ -52,7 +52,7 @@ process
         $computer = $_
         If ($pscmdlet.ShouldProcess("Item: $ReleasePath Destination: \\$computer\$PushPath\", "Copy Model"))
         {
-            Copy-Item -Path "$ReleasePath\Model\" -Destination \\$computer\$PushPath\ -Recurse -Force
+            Copy-Item -Path "$ReleasePath\Model\*.*" -Destination \\$computer\$PushPath\ -Recurse -Force
         }
     }
 }
