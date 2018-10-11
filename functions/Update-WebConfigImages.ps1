@@ -40,7 +40,8 @@ param
 		[parameter(Mandatory=$true)]
         [string]$ReleasePath,
         [ValidateSet("Prod","UAT","QA","Dev")]
-        [string]$Environment
+        [string]$Environment,
+	[string]$Setting
 	)
 process
     {
@@ -51,7 +52,7 @@ process
         $destinationFolder = "\\$computer\C$\inetpub\Touch\TouchASM"
         $DestinationFile = "$DestinationFolder\web.config"
         
-        $ReadFileName = "$ReleasePath\ImagesFolder" + $Environment + ".txt"
+        $ReadFileName = "$ReleasePath\$Setting" + $Environment + ".txt"
         
         If (Test-Path $ReadFileName)
         {
@@ -80,7 +81,7 @@ process
                         }
                         Else
                         {
-                            If ($line -like "*<setting name=`"UploadedFilesPath`" serializeAs=`"String`">*")
+                            If ($line -like "*<setting name=`"$Setting`" serializeAs=`"String`">*")
                             {
                                 $bLineToChange = 1
                             }
